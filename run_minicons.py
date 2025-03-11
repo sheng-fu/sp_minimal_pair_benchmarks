@@ -15,21 +15,28 @@ parser.add_argument('-lg', action="store", dest="lg", default = '', type=str)
 args = parser.parse_args()
 
 
-def run_inference(benchmark_path, models, lan, results_folder):
+def run_inference(benchmark_path, models, lan, exp, results_folder = "./results/"):
     benchmarks = [f for f in os.listdir(benchmark_path) if os.path.isfile(os.path.join(benchmark_path, f)) and 'json' in f and lan in f]
 
     if not os.path.exists(results_folder):
         os.makedirs(results_folder)
+
+    exp_folder = results_folder + exp + '/'
+    if not os.path.exists(exp_folder):
+        os.makedirs(exp_folder)        
+        
     results = []
 
-    exp = re.sub('(\.|/)+', '_', results_folder)
+    
+
+    #exp = re.sub('(\.|/)+', '_', results_folder)
 
     for ckpt in tqdm.tqdm(models):
         mlm_model = scorer.MaskedLMScorer(ckpt, 'cuda')
         model_name = re.sub('(\.|/)+', '_', ckpt)
         model_name = re.sub('(_babyLM_TW_FR_models_|_models_|_spbpe_concat|FacebookAI_|_sp_concat)', '', model_name)
 
-        model_ea = results_folder + '/' + model_name + '_error_analysis/'
+        model_ea = exp_folder + '/' + model_name + '_error_analysis/'
         if not os.path.exists(model_ea):
             os.makedirs(model_ea)
 
@@ -85,16 +92,16 @@ if args.lg == 'zh':
     ]
 
     benchmark_path = './data_benchmark/disfl/'
-    results_folder = './disfl_results_zh/'
+    exp = 'disfl_zh/'
     lan = 'zh'
 
-    run_inference(benchmark_path, models, lan, results_folder)
+    run_inference(benchmark_path, models, lan, exp)
 
     benchmark_path = './data_benchmark/disfl_comma/'
-    results_folder = './disfl_comma_results_zh/'
+    exp = './disfl_comma_zh/'
     lan = 'zh'
 
-    run_inference(benchmark_path, models, lan, results_folder)
+    run_inference(benchmark_path, models, lan, exp)
     
 elif args.lg == 'fr':
 
@@ -106,16 +113,16 @@ elif args.lg == 'fr':
     ]
 
     benchmark_path = './data_benchmark/disfl/'
-    results_folder = './disfl_results_fr/'
+    exp = './disfl_fr/'
     lan = 'fr'
 
-    run_inference(benchmark_path, models, lan, results_folder)
+    run_inference(benchmark_path, models, lan, exp)
 
     benchmark_path = './data_benchmark/disfl_comma/'
-    results_folder = './disfl_comma_results_fr/'
+    exp = './disfl_comma_fr/'
     lan = 'fr'
 
-    run_inference(benchmark_path, models, lan, results_folder)
+    run_inference(benchmark_path, models, lan, exp)
     
 elif args.lg == 'en':
 
@@ -127,16 +134,16 @@ elif args.lg == 'en':
     ]
 
     benchmark_path = './data_benchmark/disfl/'
-    results_folder = './disfl_results_en/'
+    exp = './disfl_en/'
     lan = 'en'
 
-    run_inference(benchmark_path, models, lan, results_folder)
+    run_inference(benchmark_path, models, lan, exp)
 
     benchmark_path = './data_benchmark/disfl_comma/'
-    results_folder = './disfl_comma_results_en/'
+    exp = './disfl_comma_en/'
     lan = 'en'
 
-    run_inference(benchmark_path, models, lan, results_folder)
+    run_inference(benchmark_path, models, lan, exp)
     
 else:
     print("language not available")
