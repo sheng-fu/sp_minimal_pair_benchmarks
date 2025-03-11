@@ -6,9 +6,17 @@ import re
 import tqdm
 import os
 import re
+import argparse
+
+parser = argparse.ArgumentParser(description='')
+
+parser.add_argument('-lg', action="store", dest="lg", default = '', type=str)
+
+args = parser.parse_args()
+
 
 def run_inference(benchmark_path, models, lan, results_folder):
-    benchmarks = [f for f in os.listdir(benchmark_path) if os.path.isfile(os.path.join(benchmark_path, f)) and 'json' in f and 'zh' in f]
+    benchmarks = [f for f in os.listdir(benchmark_path) if os.path.isfile(os.path.join(benchmark_path, f)) and 'json' in f and lan in f]
 
     if not os.path.exists(results_folder):
         os.makedirs(results_folder)
@@ -66,59 +74,69 @@ def run_inference(benchmark_path, models, lan, results_folder):
                 df.to_csv(results_folder + exp + "_results.csv")
                 
     
-models = ["FacebookAI/xlm-roberta-large",
-         "FacebookAI/xlm-roberta-base",
-          "../babyLM_TW_FR/models/zh_mixed_sp_concat",
-         "../babyLM_TW_FR/models/zh_spoken_sp_concat",
-         "../babyLM_TW_FR/models/zh_wiki_sp_concat",
-]
+    
+if args.lg == 'zh':
 
-benchmark_path = './data_benchmark/disfl/'
-results_folder = './disfl_results_zh/'
-lan = 'zh'
+    models = ["FacebookAI/xlm-roberta-large",
+             "FacebookAI/xlm-roberta-base",
+              "../babyLM_TW_FR/models/zh_mixed_sp_concat",
+             "../babyLM_TW_FR/models/zh_spoken_sp_concat",
+             "../babyLM_TW_FR/models/zh_wiki_sp_concat",
+    ]
 
-run_inference(benchmark_path, models, lan, results_folder)
+    benchmark_path = './data_benchmark/disfl/'
+    results_folder = './disfl_results_zh/'
+    lan = 'zh'
 
-benchmark_path = './data_benchmark/disfl_comma/'
-results_folder = './disfl_comma_results_zh/'
-lan = 'zh'
+    run_inference(benchmark_path, models, lan, results_folder)
 
-run_inference(benchmark_path, models, lan, results_folder)
+    benchmark_path = './data_benchmark/disfl_comma/'
+    results_folder = './disfl_comma_results_zh/'
+    lan = 'zh'
 
-models = ["FacebookAI/xlm-roberta-large",
-         "FacebookAI/xlm-roberta-base",
-          "../babyLM_TW_FR/models/fr_conv_spbpe_concat",
-         "../babyLM_TW_FR/models/fr_mixed_spbpe_concat",
-         "../babyLM_TW_FR/models/fr_wiki_spbpe_concat",
-]
+    run_inference(benchmark_path, models, lan, results_folder)
+    
+elif args.lg == 'fr':
 
-benchmark_path = './data_benchmark/disfl/'
-results_folder = './disfl_results_fr/'
-lan = 'fr'
+    models = ["FacebookAI/xlm-roberta-large",
+             "FacebookAI/xlm-roberta-base",
+              "../babyLM_TW_FR/models/fr_conv_spbpe_concat",
+             "../babyLM_TW_FR/models/fr_mixed_spbpe_concat",
+             "../babyLM_TW_FR/models/fr_wiki_spbpe_concat",
+    ]
 
-run_inference(benchmark_path, models, lan, results_folder)
+    benchmark_path = './data_benchmark/disfl/'
+    results_folder = './disfl_results_fr/'
+    lan = 'fr'
 
-benchmark_path = './data_benchmark/disfl_comma/'
-results_folder = './disfl_comma_results_fr/'
-lan = 'fr'
+    run_inference(benchmark_path, models, lan, results_folder)
 
-run_inference(benchmark_path, models, lan, results_folder)
+    benchmark_path = './data_benchmark/disfl_comma/'
+    results_folder = './disfl_comma_results_fr/'
+    lan = 'fr'
 
-models = ["FacebookAI/xlm-roberta-large",
-         "FacebookAI/xlm-roberta-base",
-          "../babyLM_TW_FR/models/en_wiki_spbpe_concat",
-         "../babyLM_TW_FR/models/en_spoken_spbpe_concat",
-         "../babyLM_TW_FR/models/en_babylm_spbpe_concat",
-]
+    run_inference(benchmark_path, models, lan, results_folder)
+    
+elif args.lg == 'en':
 
-benchmark_path = './data_benchmark/disfl/'
-results_folder = './disfl_results_en/'
-lan = 'en'
+    models = ["FacebookAI/xlm-roberta-large",
+             "FacebookAI/xlm-roberta-base",
+              "../babyLM_TW_FR/models/en_wiki_spbpe_concat",
+             "../babyLM_TW_FR/models/en_spoken_spbpe_concat",
+             "../babyLM_TW_FR/models/en_babylm_spbpe_concat",
+    ]
 
-run_inference(benchmark_path, models, lan, results_folder)
+    benchmark_path = './data_benchmark/disfl/'
+    results_folder = './disfl_results_en/'
+    lan = 'en'
 
-benchmark_path = './data_benchmark/disfl_comma/'
-results_folder = './disfl_comma_results_en/'
-lan = 'en'
+    run_inference(benchmark_path, models, lan, results_folder)
 
-run_inference(benchmark_path, models, lan, results_folder)
+    benchmark_path = './data_benchmark/disfl_comma/'
+    results_folder = './disfl_comma_results_en/'
+    lan = 'en'
+
+    run_inference(benchmark_path, models, lan, results_folder)
+    
+else:
+    print("language not available")
